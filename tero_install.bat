@@ -1,1 +1,1 @@
-php -r "eval(base64_decode(file_get_contents('./tero_install.b64')));"
+php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));"
