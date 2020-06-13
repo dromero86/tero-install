@@ -15,3 +15,12 @@ PS> php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.
 ```
 $ php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));"
 ```
+
+### Server multi projects
+If your server creates multiple projects we recommend having an alias configured
+
+Create alias in linux
+```
+alias tero-get="php -r \"eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));\""
+```
+
