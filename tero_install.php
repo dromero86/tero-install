@@ -1,3 +1,4 @@
+<?php
 class tero_install
 { 
 	function __construct()
@@ -75,14 +76,7 @@ class tero_install
 		}
 		else
 		{
-			if($to)
-			{
-				$this->_exec("cp -R {$from} {$to}"); 
-			}
-			else
-			{
-				$this->_exec("cp {$from}"); 
-			}
+			$this->_exec("cp -R {$from} ./"); 
 		}
 	}
 	
