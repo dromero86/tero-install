@@ -6,12 +6,12 @@ Position the root of the webserver where you want to install the project on your
 
 -Require PHP and GIT installed
 
-Windows
+# Windows
 ```
 PS> php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));"
 ```
 
-Linux 
+# Linux 
 ```
 $ php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));"
 ```
