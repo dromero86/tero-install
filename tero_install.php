@@ -77,11 +77,11 @@ class tero_install
 		{
 			if($to)
 			{
-				$this->_exec("copy -R {$from} {$to}"); 
+				$this->_exec("cp -R {$from} {$to}"); 
 			}
 			else
 			{
-				$this->_exec("copy {$from}"); 
+				$this->_exec("cp {$from}"); 
 			}
 		}
 	}
