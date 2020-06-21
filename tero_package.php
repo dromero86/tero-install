@@ -101,6 +101,63 @@ class tero_package {
         }
     }
 
+    private function get_tero_version($file)
+    {
+        $input_lines = file_get_contents($file);
+
+        $version = "0.0.0-DEFAULT";
+
+        $regex = "/VERSION\s\=\s\'(.*?)\'/g";
+
+        preg_match_all($regex, $input_lines, $output_array);
+
+        if(isset($output_array[1]))
+        {
+            if(isset($output_array[1][0]))
+            {
+                $version = $output_array[1][0];
+            }
+        }
+ 
+        return $version;
+    }
+
+    private function get_halcon_version($file)
+    {
+        $input_lines = file_get_contents($file);
+
+        $version = "0.0.0-DEFAULT";
+
+        $regex = "/version\s+\:\s\"(.*?)\"/g";
+        
+        preg_match_all($regex, $input_lines, $output_array);
+
+        if(isset($output_array[1]))
+        {
+            if(isset($output_array[1][0]))
+            {
+                $version = $output_array[1][0];
+            }
+        }
+
+        return $version;
+    }
+
+    private function check_engine($a, $b)
+    {
+        $check = false;
+
+        $va = explode(".",$a);
+        $vb = explode(".",$b);
+
+        $version_number_a = (int) $va[0];
+        $version_number_b = (int) $vb[0];
+
+        if($version_number_a >= $version_number_b) $check = true;
+
+        return $check;
+    }
+
     private function install($package)
     {
         $tmp    = "tmp"; 
@@ -184,9 +241,38 @@ class tero_package {
             foreach($manifest->config as $key=>$new_config)
             {
                 $cur_config = $this->_open_json("../../app/config/{$key}.json");
+ 
+                foreach ($new_config as $k => $v) 
+                {
+                    # k = loader , v = [...]
 
-                //check if config set
-                //replace valor
+                    if(is_array($v))
+                    {
+                        if( count( array_diff($v, $cur_config->{$k}) ) > 1 )
+                        {
+                            $cur_config->{$k}= $v;
+                        }
+                    }
+
+                    if(is_object($v))
+                    {
+                        if( !($v === $cur_config->{$k}) )
+                        {
+                            $cur_config->{$k}= $v;
+                        }
+                    }
+
+                    if(is_string($v) || is_bool($v) || is_int($v))
+                    {
+                        if( !($v == $cur_config->{$k}) )
+                        {
+                            $cur_config->{$k}= $v;
+                        }
+                    } 
+                }
+ 
+                //write changes
+                file_put_contents("../../app/config/{$key}.json", json_encode($cur_config, JSON_PRETTY_PRINT));
             }
         }
 
