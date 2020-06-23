@@ -53,7 +53,7 @@ class tero_package {
         chdir("{$folder}"); 
     }
     
-    private function _copy($from, $to="")
+    private function _copy($from, $to="./")
     { 
         echo "copy from: {$from} to: {$to}\n";
     
@@ -72,7 +72,7 @@ class tero_package {
         }
         else
         {
-            $this->_exec("cp -R {$from} ./"); 
+            $this->_exec("cp -R {$from} {$to}"); 
         }
     }
     
@@ -93,7 +93,7 @@ class tero_package {
         if(is_file($path))
         {
             $raw = file_get_contents($path);
-            return json_encode($raw);
+            return json_decode($raw);
         }
         else
         {
@@ -107,7 +107,7 @@ class tero_package {
 
         $version = "0.0.0-DEFAULT";
 
-        $regex = "/VERSION\s\=\s\'(.*?)\'/g";
+        $regex = "/VERSION\s\=\s\'(.*?)\'/i";
 
         preg_match_all($regex, $input_lines, $output_array);
 
@@ -128,7 +128,7 @@ class tero_package {
 
         $version = "0.0.0-DEFAULT";
 
-        $regex = "/version\s+\:\s\"(.*?)\"/g";
+        $regex = "/version\s+\:\s\"(.*?)\"/i";
         
         preg_match_all($regex, $input_lines, $output_array);
 
@@ -168,11 +168,14 @@ class tero_package {
  
         $this->_exec("git clone https://github.com/dromero86/{$package}.git");
 
+        
+
         $path_package = "{$tmp}/{$package}";
+ 
 
-        $this->_chdir($path_package); 
+        $this->_chdir($package); 
 
-        $manifest = $this->_open_json("{$path_package}/manifest.json");
+        $manifest = $this->_open_json("manifest.json");
 
         if(!$manifest)
         {
@@ -190,7 +193,7 @@ class tero_package {
         $halcon_v  = $this->get_halcon_version($path_engine_halcon);
   
         //compare
-        
+ 
         if( !$this->check_engine($tero_v, $manifest->engine->tero) )
         {
             echo "Incompatible version of tero {$tero_v}: Required {$manifest->engine->tero}.\n";
@@ -213,13 +216,19 @@ class tero_package {
         //copy files
         if( isset($manifest->files) ) 
         {
+            var_dump((array)$manifest->files);
             //copy files 
-            foreach ($manifest->files as $from => $to) 
+            foreach ((array)$manifest->files as $from => $to) 
             {
+                
+
                 $to = "../../{$to}";
 
                 $this->_copy($from, $to);
             }
+        }
+        else{
+            echo "{$manifest->files} no set\n";
         }
  
         //install sql
@@ -242,39 +251,20 @@ class tero_package {
             {
                 $cur_config = $this->_open_json("../../app/config/{$key}.json");
  
+                if($cur_config!= false)
                 foreach ($new_config as $k => $v) 
                 {
-                    # k = loader , v = [...]
-
-                    if(is_array($v))
-                    {
-                        if( count( array_diff($v, $cur_config->{$k}) ) > 1 )
-                        {
-                            $cur_config->{$k}= $v;
-                        }
-                    }
-
-                    if(is_object($v))
-                    {
-                        if( !($v === $cur_config->{$k}) )
-                        {
-                            $cur_config->{$k}= $v;
-                        }
-                    }
-
-                    if(is_string($v) || is_bool($v) || is_int($v))
-                    {
-                        if( !($v == $cur_config->{$k}) )
-                        {
-                            $cur_config->{$k}= $v;
-                        }
-                    } 
+                    $cur_config->{$k}= $v; 
                 }
  
                 //write changes
                 file_put_contents("../../app/config/{$key}.json", json_encode($cur_config, JSON_PRETTY_PRINT));
             }
         }
+
+        $this->_chdir("../../"); 
+
+        $this->_rmdir($tmp);
 
     }
 
@@ -308,4 +298,8 @@ class tero_package {
         }
 
     }
-}
+} 
+
+
+$t = new tero_package();
+$t->build($argv[1], $argv[2]);
