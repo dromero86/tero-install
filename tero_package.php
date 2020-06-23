@@ -197,7 +197,6 @@ class tero_package {
             echo "Incompatible version of halcon {$halcon_v}: Required {$manifest->engine->halcon}.\n";
             return;
         }
-
         
         if( isset($manifest->tero_forge) )
         if( count($manifest->tero_forge) )
