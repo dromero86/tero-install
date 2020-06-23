@@ -10,8 +10,7 @@ class tero_package {
         
         return $folder;
     }
-    
-    
+        
     private function _exec($command) 
     {
         $result = array();
