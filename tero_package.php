@@ -167,11 +167,8 @@ class tero_package {
         $this->_chdir( $tmp ); 
  
         $this->_exec("git clone https://github.com/dromero86/{$package}.git");
-
         
-
         $path_package = "{$tmp}/{$package}";
- 
 
         $this->_chdir($package); 
 
@@ -184,16 +181,13 @@ class tero_package {
         }
 
         echo "Installing {$package}\n";
-
-        //check engine 
+ 
         $path_engine_tero   = "../../app/vendor/core.php";
         $path_engine_halcon = "../../sdk/sys/core/loader.js";
 
         $tero_v    = $this->get_tero_version($path_engine_tero); 
         $halcon_v  = $this->get_halcon_version($path_engine_halcon);
-  
-        //compare
- 
+   
         if( !$this->check_engine($tero_v, $manifest->engine->tero) )
         {
             echo "Incompatible version of tero {$tero_v}: Required {$manifest->engine->tero}.\n";
@@ -206,22 +200,17 @@ class tero_package {
             return;
         }
 
-        //check forge packages
+        
         if( isset($manifest->tero_forge) )
         if( count($manifest->tero_forge) )
         {
-            //copy packages
+           
         }
-
-        //copy files
+ 
         if( isset($manifest->files) ) 
-        {
-            var_dump((array)$manifest->files);
-            //copy files 
+        { 
             foreach ((array)$manifest->files as $from => $to) 
-            {
-                
-
+            { 
                 $to = "../../{$to}";
 
                 $this->_copy($from, $to);
@@ -230,10 +219,7 @@ class tero_package {
         else{
             echo "{$manifest->files} no set\n";
         }
- 
-        //install sql
-        // * para instalar la query se debe conocer -user -pass -db 
-        // * que estan en db.json
+
         if( isset($manifest->boot_sql) ) 
         {
             $db_conf = $this->_open_json("../../app/config/db.json");
@@ -243,8 +229,7 @@ class tero_package {
                 $this->_exec("mysql -u {$db_conf->database->user} -p{$db_conf->database->pass} {$db_conf->database->db} < {$item}");
             }  
         }
-
-        //check config
+  
         if( isset($manifest->config) ) 
         {
             foreach($manifest->config as $key=>$new_config)
@@ -255,9 +240,7 @@ class tero_package {
                 foreach ($new_config as $k => $v) 
                 {
                     $cur_config->{$k}= $v; 
-                }
- 
-                //write changes
+                } 
                 file_put_contents("../../app/config/{$key}.json", json_encode($cur_config, JSON_PRETTY_PRINT));
             }
         }
@@ -265,7 +248,6 @@ class tero_package {
         $this->_chdir("../../"); 
 
         $this->_rmdir($tmp);
-
     }
 
     private function update($package)
@@ -273,7 +255,6 @@ class tero_package {
         echo "UPDATE NO IMPLEMENTED\n";
         return;
     }
-
 
     public function build($cmd, $package="")
     {
@@ -296,10 +277,8 @@ class tero_package {
             case "install": $this->install($package); break;
             case "update" : $this->update ($package); break;
         }
-
     }
 } 
-
 
 $t = new tero_package();
 $t->build($argv[1], $argv[2]);
