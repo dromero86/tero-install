@@ -1,5 +1,3 @@
-<?php 
-
 class tero_package {
 
     private function _os_path($folder)
