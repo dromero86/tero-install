@@ -9,12 +9,12 @@ Position the root of the webserver where you want to install the project on your
 
 # Windows
 ```
-PS> php -r "eval(base64_decode(file_get_contents('shorturl.at/gzTW9')));"
+PS> php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));"
 ```
 
 # Linux 
 ```
-$ php -r "eval(base64_decode(file_get_contents('shorturl.at/gzTW9')));"
+$ php -r "eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));"
 ```
 
 ### Server multi projects
@@ -22,6 +22,6 @@ If your server creates multiple projects we recommend having an alias configured
 
 Create alias in linux
 ```
-alias tero-get="php -r \"eval(base64_decode(file_get_contents('shorturl.at/gzTW9')));\""
+alias tero-get="php -r \"eval(base64_decode(file_get_contents('https://raw.githubusercontent.com/dromero86/tero-install/master/tero_install.b64')));\""
 ```
 
