@@ -159,7 +159,7 @@ class tero_package {
 
     private function install($package)
     {
-        $tmp    = "/tmp"; 
+        $tmp    = "./tmp"; 
  
         $this->_mkdir( $tmp );
 
